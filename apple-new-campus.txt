@@ -232,3 +232,7 @@ Comments
 
 John Smith:
 Hey, how about some photos?
+
+Joe Plumber:
+Actually we have some. I'll share it later.
+
