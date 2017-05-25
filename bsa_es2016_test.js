@@ -3,9 +3,7 @@
 class Fighter {
 
     constructor(name, power = 10, health = 100) {
-        this._name = name;
-        this._power = power;
-        this._health = health;
+        [this._name, this._power, this._health] = [name, power, health];
     }
 
     setDamage(damage) {
@@ -61,7 +59,7 @@ function fight(fighter1, fighter2, ...points) {
         fighter1Turn = !fighter1Turn;
     }
     [fighter1, fighter2].forEach(
-      fighter => fighter.logHealth()
+        fighter => fighter.logHealth()
     );
 }
 
