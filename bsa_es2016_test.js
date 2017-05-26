@@ -47,23 +47,47 @@ class ImprovedFighter extends Fighter {
     }
 }
 
-function fight(fighter1, fighter2, ...points) {
-    let fighter1Turn = true;
+let fightObj = {
+    fighter1: Fighter.createFighter('John Smith'),
+    fighter2: ImprovedFighter.createImprovedFighter('Joe Plumber')
+};
+
+fightObj[Symbol.iterator] = function(hasNext) {
+
+    let fighter1 = this.fighter1;
+    let fighter2 = this.fighter2;
+
+    return { // this is the iterator object, returning a single element, the string "bye"
+        next: function() {
+            if (hasNext(fighter1, fighter2)) {
+                return { done: true };
+            } else {
+                if (this._fighter1Turn) {
+                    this._fighter1Turn = !this._fighter1Turn;
+                    return { value: [fighter1, fighter2], done: false };
+                } else {
+                    this._fighter1Turn = !this._fighter1Turn;
+                    return { value: [fighter2, fighter1], done: false };
+                }
+            }
+        },
+        _fighter1Turn: true
+    };
+};
+
+function fight(fightObj, ...points) {
+    let fightIterator = fightObj[Symbol.iterator](
+            (fighter1, fighter2) => (!fighter1.isAlive() || !fighter2.isAlive())
+    );
     for (let point of points) {
-        if (fighter1Turn) {
-            fighter1.hit(fighter2, point);
-        } else {
-            fighter2.hit(fighter1, point);
-        }
-        if (!fighter1.isAlive() || !fighter2.isAlive()) break;
-        fighter1Turn = !fighter1Turn;
+        let result = fightIterator.next();
+        if (result.done) break;
+        let [fighter1, fighter2] = result.value;
+        fighter1.hit(fighter2, point);
     }
-    [fighter1, fighter2].forEach(
+    [fightObj.fighter1, fightObj.fighter2].forEach(
         fighter => fighter.logHealth()
     );
 }
 
-let johnSmith = Fighter.createFighter('John Smith');
-let joePlumber = ImprovedFighter.createImprovedFighter('Joe Plumber');
-
-fight(johnSmith, joePlumber, 1, 2, 3, 4, 5, 6, 7);
+fight(fightObj, 1, 2, 3, 4, 5, 6, 7);
