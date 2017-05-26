@@ -59,29 +59,28 @@ fightObj[Symbol.iterator] = function(hasNext) {
 
     return { // this is the iterator object, returning a single element, the string "bye"
         next: function() {
-            if (hasNext(fighter1, fighter2)) {
+            if (!hasNext(fighter1, fighter2)) {
                 return { done: true };
             } else {
-                if (this._fighter1Turn) {
-                    this._fighter1Turn = !this._fighter1Turn;
+                if (++this._hits % 2) {
                     return { value: [fighter1, fighter2], done: false };
                 } else {
-                    this._fighter1Turn = !this._fighter1Turn;
                     return { value: [fighter2, fighter1], done: false };
                 }
             }
         },
-        _fighter1Turn: true
+        _hits: 0
     };
 };
 
 function fight(fightObj, ...points) {
     let fightIterator = fightObj[Symbol.iterator](
-            (fighter1, fighter2) => (!fighter1.isAlive() || !fighter2.isAlive())
+            (fighter1, fighter2) => (fighter1.isAlive() && fighter2.isAlive())
     );
     for (let point of points) {
         let result = fightIterator.next();
         if (result.done) break;
+        
         let [fighter1, fighter2] = result.value;
         fighter1.hit(fighter2, point);
     }
