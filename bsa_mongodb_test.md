@@ -1,6 +1,7 @@
 #BSA MongoDB Test#
 1. **Написать запрос для поиска всех студентов, у которых score > 87% и < 93% по любому из типов выполненных заданий.**
-    ```db.students.find(
+    ```
+    db.students.find(
         {  
            scores: {  
               $elemMatch: {  
@@ -11,9 +12,11 @@
               }
            }
         }
-    )```
+    )
+    ```
 2. **Написать запрос-агрегацию для выборки всех студентов, у которых результат по экзамену (type: "exam") более 90% (использование unwind)**
-    ```db.students.aggregate([
+    ```
+    db.students.aggregate([
         {
             $unwind: "$scores"
         },
@@ -23,9 +26,11 @@
                 "scores.score": { $gt: 90 }
             }
         }
-    ])```
+    ])
+    ```
 3. **Студентам с именем Dusti Lemmond добавить поле “accepted” со значением true.**
-    ```db.students.update(
+    ```
+    db.students.update(
         {
            name: 'Dusti Lemmond',
            *// В условии сказано, что нужно только добавить*
@@ -39,7 +44,8 @@
         {  
            multi :true
         }
-    )```
+    )
+    ```
     
     
     
