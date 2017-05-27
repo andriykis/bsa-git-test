@@ -34,7 +34,7 @@
     db.students.update(
         {
            name: 'Dusti Lemmond',
-           *// В условии сказано, что нужно только добавить*
+           // В условии сказано, что нужно только добавить
            'accepted': {$exists : false}
         },
         {  
